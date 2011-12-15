@@ -682,6 +682,14 @@ void cm(CGPDFScannerRef scanner, void *info)
 	return selectionsDic;
 }
 
+- (NSMutableArray*)selections {
+    NSLog(@"MHPDF Warning : Please use selectionsDic instead of selections");
+    if ([selectionsDic allKeys].count != 0)
+        return [selectionsDic objectForKey:[[selectionsDic allKeys] objectAtIndex:0]];
+    else
+        return nil;
+}
+
 - (void)dealloc
 {
 	CGPDFOperatorTableRelease(operatorTable);
@@ -695,5 +703,5 @@ void cm(CGPDFScannerRef scanner, void *info)
 	[super dealloc];
 }
 
-@synthesize documentURL, keyword, stringDetector, fontCollection, renderingStateStack, currentSelection, selectionsDic, rawTextContent, delegate;
+@synthesize documentURL, keyword, stringDetector, fontCollection, renderingStateStack, currentSelection, selectionsDic, rawTextContent, delegate, selections;
 @end

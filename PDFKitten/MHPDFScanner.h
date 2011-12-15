@@ -48,6 +48,7 @@
 
 /* We use an NSDictionary to avoid NSPredicates when accessing specifics Selections for Pages */
 @property (nonatomic, retain) NSMutableDictionary *selectionsDic;
+@property (nonatomic, retain) NSMutableArray *selections __deprecated;
 @property (nonatomic, retain) RenderingStateStack *renderingStateStack;
 @property (nonatomic, retain) MHPDFFontCollection *fontCollection;
 @property (nonatomic, retain) MHPDFStringDetector *stringDetector;

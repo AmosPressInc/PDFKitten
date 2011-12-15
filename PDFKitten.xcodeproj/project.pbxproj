@@ -39,7 +39,6 @@
 		2CE7BCE113897159009784B9 /* MHPDFType1Font.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7BCDC13897159009784B9 /* MHPDFType1Font.m */; };
 		2CE7BCE213897159009784B9 /* MHPDFType3Font.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7BCDE13897159009784B9 /* MHPDFType3Font.m */; };
 		2CE7BCEF13897294009784B9 /* MHPDFSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7BCEE13897294009784B9 /* MHPDFSelection.m */; };
-		E0A859EB149A2D2D00D3FB01 /* Guide_Producteurs_2011.pdf in Resources */ = {isa = PBXBuildFile; fileRef = E0A859EA149A2D2D00D3FB01 /* Guide_Producteurs_2011.pdf */; };
 		E0EF104C149A490600D2018F /* MHPDFScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = E0EF104B149A490600D2018F /* MHPDFScanner.m */; };
 		E0EF104E149A497400D2018F /* MHPDFFontCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = E0EF104D149A497400D2018F /* MHPDFFontCollection.m */; };
 		E0EF1051149A4AB900D2018F /* MHPDFRenderingState.m in Sources */ = {isa = PBXBuildFile; fileRef = E0EF1050149A4AB900D2018F /* MHPDFRenderingState.m */; };
@@ -65,7 +64,7 @@
 		2CA0FCA413EEB1C00028DCCD /* PageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PageViewController.xib; path = PDFKitten/PageViewController.xib; sourceTree = SOURCE_ROOT; };
 		2CC77EBF14560E2D000E9B8E /* PDFPageDetailsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PDFPageDetailsView.h; path = PDFKitten/PDFPageDetailsView.h; sourceTree = SOURCE_ROOT; };
 		2CC77EC014560E2E000E9B8E /* PDFPageDetailsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PDFPageDetailsView.m; path = PDFKitten/PDFPageDetailsView.m; sourceTree = SOURCE_ROOT; };
-		2CDC3F63138972E5006CC6FB /* MHPDFStringDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; name = MHPDFStringDetector.h; path = PDFKitten/MHPDFStringDetector.h; sourceTree = SOURCE_ROOT; };
+		2CDC3F63138972E5006CC6FB /* MHPDFStringDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHPDFStringDetector.h; path = PDFKitten/MHPDFStringDetector.h; sourceTree = SOURCE_ROOT; };
 		2CDC3F64138972E5006CC6FB /* MHPDFStringDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHPDFStringDetector.m; path = PDFKitten/MHPDFStringDetector.m; sourceTree = SOURCE_ROOT; };
 		2CDC3F7B138977C0006CC6FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = PDFKitten/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		2CDC3F7D138977C1006CC6FB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = PDFKitten/en.lproj/MainWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -103,9 +102,8 @@
 		2CE7BCDE13897159009784B9 /* MHPDFType3Font.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHPDFType3Font.m; path = PDFKitten/MHPDFType3Font.m; sourceTree = SOURCE_ROOT; };
 		2CE7BCE513897245009784B9 /* MHPDFScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHPDFScanner.h; path = PDFKitten/MHPDFScanner.h; sourceTree = SOURCE_ROOT; };
 		2CE7BCE91389725D009784B9 /* MHPDFRenderingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHPDFRenderingState.h; path = PDFKitten/MHPDFRenderingState.h; sourceTree = SOURCE_ROOT; };
-		2CE7BCED13897293009784B9 /* MHPDFSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; name = MHPDFSelection.h; path = PDFKitten/MHPDFSelection.h; sourceTree = SOURCE_ROOT; };
+		2CE7BCED13897293009784B9 /* MHPDFSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHPDFSelection.h; path = PDFKitten/MHPDFSelection.h; sourceTree = SOURCE_ROOT; };
 		2CE7BCEE13897294009784B9 /* MHPDFSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHPDFSelection.m; path = PDFKitten/MHPDFSelection.m; sourceTree = SOURCE_ROOT; };
-		E0A859EA149A2D2D00D3FB01 /* Guide_Producteurs_2011.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Guide_Producteurs_2011.pdf; sourceTree = SOURCE_ROOT; };
 		E0EF104B149A490600D2018F /* MHPDFScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHPDFScanner.m; path = PDFKitten/MHPDFScanner.m; sourceTree = SOURCE_ROOT; };
 		E0EF104D149A497400D2018F /* MHPDFFontCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MHPDFFontCollection.m; path = PDFKitten/MHPDFFontCollection.m; sourceTree = SOURCE_ROOT; };
 		E0EF104F149A4A4800D2018F /* MHPDFType1Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MHPDFType1Font.h; path = PDFKitten/MHPDFType1Font.h; sourceTree = SOURCE_ROOT; };
@@ -204,7 +202,6 @@
 		2CA0FC9A13EEB1430028DCCD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E0A859EA149A2D2D00D3FB01 /* Guide_Producteurs_2011.pdf */,
 				2C77F7B31442381300767E6A /* Kurt the Cat.pdf */,
 				2CDC3F7A138977C0006CC6FB /* InfoPlist.strings */,
 				2CE7BCAA13896EFB009784B9 /* PDFKitten-Info.plist */,
@@ -384,7 +381,6 @@
 				2CDC3F81138977C1006CC6FB /* MainWindow.xib in Resources */,
 				2CA0FCA613EEB1C00028DCCD /* PageViewController.xib in Resources */,
 				2C77F7B41442381300767E6A /* Kurt the Cat.pdf in Resources */,
-				E0A859EB149A2D2D00D3FB01 /* Guide_Producteurs_2011.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
