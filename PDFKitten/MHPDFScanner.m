@@ -38,6 +38,8 @@ void q(CGPDFScannerRef scanner, void *info);
 void Q(CGPDFScannerRef scanner, void *info);
 void cm(CGPDFScannerRef scanner, void *info);
 
+- (void) callDelegateOnMainThread: (SEL) selector withArg: (id) arg secondArg: (id) secondArg;
+
 @property (nonatomic, retain) MHPDFSelection *currentSelection;
 @property (nonatomic, readonly) MHPDFRenderingState *currentRenderingState;
 @property (nonatomic, readonly) MHPDFFont *currentFont;
@@ -297,7 +299,10 @@ void cm(CGPDFScannerRef scanner, void *info);
 				range = [*self.rawTextContent rangeOfString:self.keyword options:NSCaseInsensitiveSearch range:searchRange];
 				
 			}
+            [self callDelegateOnMainThread:@selector(mhPDFScanner:didFoundNewResults:) withArg:self secondArg:arrayOfSelections];
         }
+        else
+            [self callDelegateOnMainThread:@selector(mhPDFScanner:didNotFoundResultInPage:) withArg:self secondArg:[NSNumber numberWithUnsignedInteger:_currentPage]];
         
         
         NSMutableString *contentString = [NSMutableString string];
@@ -313,7 +318,14 @@ void cm(CGPDFScannerRef scanner, void *info);
 			_searchFinished = YES;
         }
     }
-    NSLog(@"%@", self.selectionsDic);
+
+    NSInteger totalNumberOfResults = 0;
+    for (id key in self.selectionsDic)
+    {
+        totalNumberOfResults += ((NSArray*)[self.selectionsDic objectForKey:key]).count;
+    }
+    
+    [self callDelegateOnMainThread:@selector(mhPDFScanner:didFinishSearchingInDocumentWithTotalResult:) withArg:self secondArg:[NSNumber numberWithInteger:totalNumberOfResults]];
 }
 
 #pragma mark StringDetectorDelegate
@@ -603,6 +615,40 @@ void cm(CGPDFScannerRef scanner, void *info)
 	state.ctm = CGAffineTransformConcat(state.ctm, t);
 }
 
+#pragma mark - Delegate Mananagement
+
+- (void) callDelegate: (SEL) selector withArg: (id) arg secondArg: (id) secondArg
+{
+    //assert([NSThread isMainThread]);
+    if([self.delegate respondsToSelector: selector])
+    {
+        if(arg != nil)
+        {
+            [self.delegate performSelector: selector withObject: arg withObject: secondArg];
+        }
+        else
+        {
+            [self.delegate performSelector: selector withObject: secondArg];
+        }
+    }
+}
+
+
+- (void) callDelegateOnMainThread: (SEL) selector withArg: (id) arg secondArg: (id) secondArg
+{    
+    NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+    float systemVersionF = [systemVersion floatValue];
+    if (systemVersionF >= 4.0 ) {
+        dispatch_async(dispatch_get_main_queue(), ^(void)
+                       {
+                           [self callDelegate: selector withArg: arg secondArg: secondArg];
+                       });
+    }
+    else {
+        [self callDelegate: selector withArg: arg secondArg: secondArg];
+    }
+    
+}
 
 #pragma mark -
 #pragma mark Memory management
@@ -648,5 +694,5 @@ void cm(CGPDFScannerRef scanner, void *info)
 	[super dealloc];
 }
 
-@synthesize documentURL, keyword, stringDetector, fontCollection, renderingStateStack, currentSelection, selectionsDic, rawTextContent;
+@synthesize documentURL, keyword, stringDetector, fontCollection, renderingStateStack, currentSelection, selectionsDic, rawTextContent, delegate;
 @end

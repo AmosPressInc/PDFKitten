@@ -2,7 +2,7 @@
 #import "PageView.h"
 #import "MHPDFScanner.h"
 
-@interface RootViewController : UIViewController <PageViewDelegate, UIPopoverControllerDelegate, UISearchBarDelegate> {
+@interface RootViewController : UIViewController <PageViewDelegate, UIPopoverControllerDelegate, UISearchBarDelegate, MHPDFSCannerDelegate> {
 	CGPDFDocumentRef document;
     UIPopoverController *libraryPopover;
 	IBOutlet PageView *pageView;

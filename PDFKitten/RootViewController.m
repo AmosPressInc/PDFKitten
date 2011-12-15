@@ -135,7 +135,7 @@
     if(!_testBGScanner)
         _testBGScanner = [[MHPDFScanner alloc] initWithDocument:document];
     [_testBGScanner cancelScanning];
-    
+    _testBGScanner.delegate = self;
     [_testBGScanner setKeyword:keyword];
     
     [self performSelector:@selector(startNewSearch) withObject:nil afterDelay:0.3];
@@ -145,6 +145,20 @@
 
 - (void) startNewSearch {
     [_testBGScanner scanDocumentStartingFromPage:1];
+}
+
+#pragma mark - MHPDFScannerDelegate 
+- (void) mhPDFScanner:(MHPDFScanner *)searcher didFinishSearchingInDocumentWithTotalResult:(NSNumber *)totalResult {
+    NSLog(@"Finish = %d", [totalResult intValue]);    
+}
+
+- (void) mhPDFScanner:(MHPDFScanner *)scanner didFoundNewResults:(NSArray *)newResults {
+    NSLog(@"******************");
+    NSLog(@"%@", newResults);
+}
+
+- (void) mhPDFScanner:(MHPDFScanner *)searcher didNotFoundResultInPage:(NSNumber *)page {
+    NSLog(@"nothing found in %d", [page intValue]);
 }
 
 #pragma mark Memory Management

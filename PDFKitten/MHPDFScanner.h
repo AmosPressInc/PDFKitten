@@ -4,6 +4,8 @@
 #import "MHPDFRenderingState.h"
 #import "MHPDFSelection.h"
 
+@protocol MHPDFSCannerDelegate;
+
 @interface MHPDFScanner : NSObject <StringDetectorDelegate> {
 	NSURL *documentURL;
 	NSString *keyword;
@@ -51,4 +53,13 @@
 @property (nonatomic, retain) MHPDFStringDetector *stringDetector;
 @property (nonatomic, retain) NSString *keyword;
 @property (nonatomic, assign) NSMutableString **rawTextContent;
+
+@property (nonatomic, assign) id <MHPDFSCannerDelegate>delegate;
+
+@end
+
+@protocol MHPDFSCannerDelegate <NSObject>
+- (void) mhPDFScanner:(MHPDFScanner*)scanner didFoundNewResults:(NSArray*)newResults;
+- (void) mhPDFScanner:(MHPDFScanner*)searcher didFinishSearchingInDocumentWithTotalResult:(NSNumber*)totalResult;
+- (void) mhPDFScanner:(MHPDFScanner*)searcher didNotFoundResultInPage:(NSNumber*)page;
 @end
