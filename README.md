@@ -5,11 +5,11 @@ Fork from the impressive work of KurtCode : https://github.com/KurtCode/PDFKitte
 
 ### About my fork
 For my project, I need to search through all the document. So, from the original repo, here are my modifications :
-• Background parsing when you parse all the document
-• The output data is changed to a dictionary which contains array for keys (the pages). This is more suitable when you need to access selections for a specific page.
-• Renaming of all the core files, with reference to the work of KurtCode. This renaming is to make life easier when you include the files into a big bunch of others files.
-• Integrate MHLog to avoid multiple NSLog in production
-• The scan for a single page stays in main thread
+* Background parsing when you parse all the document
+* The output data is changed to a dictionary which contains array for keys (the pages). This is more suitable when you need to access selections for a specific page.
+* Renaming of all the core files, with reference to the work of KurtCode. This renaming is to make life easier when you include the files into a big bunch of others files.
+* Integrate MHLog to avoid multiple NSLog in production
+* The scan for a single page stays in main thread
 
 ### Why?
 
