@@ -297,6 +297,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 				NSInteger startSearch = range.location + range.length;
 				searchRange = NSMakeRange(startSearch, [*self.rawTextContent length] - startSearch);
 				range = [*self.rawTextContent rangeOfString:self.keyword options:NSCaseInsensitiveSearch range:searchRange];
+                currentSelectionIndex ++;
 				
 			}
             [self callDelegateOnMainThread:@selector(mhPDFScanner:didFoundNewResults:) withArg:self secondArg:arrayOfSelections];
