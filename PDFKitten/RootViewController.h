@@ -1,6 +1,6 @@
 #import "PageViewController.h"
 #import "PageView.h"
-#import "Scanner.h"
+#import "MHPDFScanner.h"
 
 @interface RootViewController : UIViewController <PageViewDelegate, UIPopoverControllerDelegate, UISearchBarDelegate> {
 	CGPDFDocumentRef document;
@@ -9,7 +9,7 @@
 	IBOutlet UISearchBar *searchBar;
 	NSString *keyword;
     
-    Scanner *_testBGScanner;
+    MHPDFScanner *_testBGScanner;
 }
 
 @property (nonatomic, readonly) NSString *documentPath;

@@ -68,7 +68,7 @@
     {
         CGContextSetFillColorWithColor(ctx, [[UIColor yellowColor] CGColor]);
         CGContextSetBlendMode(ctx, kCGBlendModeMultiply);
-        for (Selection *s in self.selections)
+        for (MHPDFSelection *s in self.selections)
         {
             CGContextSaveGState(ctx);
             CGContextConcatCTM(ctx, s.transform);
@@ -99,11 +99,11 @@
 
 #pragma mark Memory Management
 
-- (Scanner *)scanner
+- (MHPDFScanner *)scanner
 {
 	if (!scanner)
 	{
-		scanner = [[Scanner alloc] init];
+		scanner = [[MHPDFScanner alloc] init];
 	}
 	return scanner;
 }

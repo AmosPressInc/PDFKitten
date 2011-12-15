@@ -1,7 +1,7 @@
-#import "CIDType2Font.h"
+#import "MHPDFCIDType2Font.h"
 
 
-@implementation CIDType2Font
+@implementation MHPDFCIDType2Font
 
 - (void)setCIDToGIDMapWithDictionary:(CGPDFDictionaryRef)dict
 {

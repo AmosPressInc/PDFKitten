@@ -1,7 +1,7 @@
-#import "RenderingState.h"
+#import "MHPDFRenderingState.h"
 
 
-@implementation RenderingState
+@implementation MHPDFRenderingState
 
 - (id)init
 {
@@ -18,7 +18,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	RenderingState *copy = [[RenderingState alloc] init];
+	MHPDFRenderingState *copy = [[MHPDFRenderingState alloc] init];
 	copy.lineMatrix = self.lineMatrix;
 	copy.textMatrix = self.textMatrix;
 	copy.leadning = self.leadning;
@@ -107,7 +107,7 @@
 	if ((self = [super init]))
 	{
 		stack = [[NSMutableArray alloc] init];
-		RenderingState *rootRenderingState = [[RenderingState alloc] init];
+		MHPDFRenderingState *rootRenderingState = [[MHPDFRenderingState alloc] init];
 		[self pushRenderingState:rootRenderingState];
 		[rootRenderingState release];
 	}
@@ -115,21 +115,21 @@
 }
 
 /* The rendering state currently on top of the stack */
-- (RenderingState *)topRenderingState
+- (MHPDFRenderingState *)topRenderingState
 {
 	return [stack lastObject];
 }
 
 /* Push a rendering state to the stack */
-- (void)pushRenderingState:(RenderingState *)state
+- (void)pushRenderingState:(MHPDFRenderingState *)state
 {
 	[stack addObject:state];
 }
 
 /* Pops the top rendering state off the stack */
-- (RenderingState *)popRenderingState
+- (MHPDFRenderingState *)popRenderingState
 {
-	RenderingState *state = [stack lastObject];
+	MHPDFRenderingState *state = [stack lastObject];
 	[[stack retain] autorelease];
 	[stack removeLastObject];
 	return state;

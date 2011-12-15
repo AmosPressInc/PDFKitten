@@ -1,8 +1,8 @@
-#import "Scanner.h"
+#import "MHPDFScanner.h"
 
 #pragma mark 
 
-@interface Scanner ()
+@interface MHPDFScanner ()
 
 #pragma mark - Text showing
 
@@ -38,9 +38,9 @@ void q(CGPDFScannerRef scanner, void *info);
 void Q(CGPDFScannerRef scanner, void *info);
 void cm(CGPDFScannerRef scanner, void *info);
 
-@property (nonatomic, retain) Selection *currentSelection;
-@property (nonatomic, readonly) RenderingState *currentRenderingState;
-@property (nonatomic, readonly) Font *currentFont;
+@property (nonatomic, retain) MHPDFSelection *currentSelection;
+@property (nonatomic, readonly) MHPDFRenderingState *currentRenderingState;
+@property (nonatomic, readonly) MHPDFFont *currentFont;
 @property (nonatomic, readonly) CGPDFDocumentRef pdfDocument;
 @property (nonatomic, copy) NSURL *documentURL;
 
@@ -51,7 +51,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 
 #pragma mark
 
-@implementation Scanner
+@implementation MHPDFScanner
 
 #pragma mark - Initialization
 
@@ -76,12 +76,12 @@ void cm(CGPDFScannerRef scanner, void *info);
 
 #pragma mark Scanner state accessors
 
-- (RenderingState *)currentRenderingState
+- (MHPDFRenderingState *)currentRenderingState
 {
 	return [self.renderingStateStack topRenderingState];
 }
 
-- (Font *)currentFont
+- (MHPDFFont *)currentFont
 {
 	return self.currentRenderingState.font;
 }
@@ -137,7 +137,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 }
 
 /* Create a font dictionary given a PDF page */
-- (FontCollection *)fontCollectionWithPage:(CGPDFPageRef)page
+- (MHPDFFontCollection *)fontCollectionWithPage:(CGPDFPageRef)page
 {
 	CGPDFDictionaryRef dict = CGPDFPageGetDictionary(page);
 	if (!dict)
@@ -153,7 +153,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 	}
 	CGPDFDictionaryRef fonts;
 	if (!CGPDFDictionaryGetDictionary(resources, "Font", &fonts)) return nil;
-	FontCollection *collection = [[FontCollection alloc] initWithFontDictionary:fonts];
+	MHPDFFontCollection *collection = [[MHPDFFontCollection alloc] initWithFontDictionary:fonts];
 	return [collection autorelease];
 }
 
@@ -258,7 +258,7 @@ void cm(CGPDFScannerRef scanner, void *info);
             
 			while (range.location != NSNotFound) {
                 
-				Selection *selection = (Selection*)[arrayOfSelections objectAtIndex:currentSelectionIndex];
+				MHPDFSelection *selection = (MHPDFSelection*)[arrayOfSelections objectAtIndex:currentSelectionIndex];
 				
 				// gestion du texte autour
 				NSInteger leftStart, rightEnd;
@@ -318,9 +318,9 @@ void cm(CGPDFScannerRef scanner, void *info);
 
 #pragma mark StringDetectorDelegate
 
-- (void)detector:(StringDetector *)detector didScanCharacter:(unichar)character
+- (void)detector:(MHPDFStringDetector *)detector didScanCharacter:(unichar)character
 {
-	RenderingState *state = [self currentRenderingState];
+	MHPDFRenderingState *state = [self currentRenderingState];
 	CGFloat width = [self.currentFont widthOfCharacter:character withFontSize:state.fontSize];
 	width /= 1000;
 	width += state.characterSpacing;
@@ -331,17 +331,17 @@ void cm(CGPDFScannerRef scanner, void *info);
 	[state translateTextPosition:CGSizeMake(width, 0)];
 }
 
-- (void)detector:(StringDetector *)detector didStartMatchingString:(NSString *)string
+- (void)detector:(MHPDFStringDetector *)detector didStartMatchingString:(NSString *)string
 {
-	Selection *sel = [[Selection alloc] initWithStartState:self.currentRenderingState];
+	MHPDFSelection *sel = [[MHPDFSelection alloc] initWithStartState:self.currentRenderingState];
     sel.pageNumber = _currentPage;
 	self.currentSelection = sel;
 	[sel release];
 }
 
-- (void)detector:(StringDetector *)detector foundString:(NSString *)needle
+- (void)detector:(MHPDFStringDetector *)detector foundString:(NSString *)needle
 {	
-	RenderingState *state = [[self renderingStateStack] topRenderingState];
+	MHPDFRenderingState *state = [[self renderingStateStack] topRenderingState];
 	[self.currentSelection finalizeWithState:state];
 
 	if (self.currentSelection)
@@ -362,7 +362,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 
 void BT(CGPDFScannerRef scanner, void *info)
 {
-	[[(Scanner *)info currentRenderingState] setTextMatrix:CGAffineTransformIdentity replaceLineMatrix:YES];
+	[[(MHPDFScanner *)info currentRenderingState] setTextMatrix:CGAffineTransformIdentity replaceLineMatrix:YES];
 }
 
 /* Pops the requested number of values, and returns the number of values popped */
@@ -383,7 +383,7 @@ int popIntegers(CGPDFScannerRef scanner, CGPDFInteger *buffer, size_t length)
 
 #pragma mark Text showing operators
 
-void didScanSpace(float value, Scanner *scanner)
+void didScanSpace(float value, MHPDFScanner *scanner)
 {
     float width = [scanner.currentRenderingState convertToUserSpace:value];
     [scanner.currentRenderingState translateTextPosition:CGSizeMake(-width, 0)];
@@ -398,7 +398,7 @@ void didScanSpace(float value, Scanner *scanner)
 }
 
 /* Called any time the scanner scans a string */
-void didScanString(CGPDFStringRef pdfString, Scanner *scanner)
+void didScanString(CGPDFStringRef pdfString, MHPDFScanner *scanner)
 {
 	NSString *string = [[scanner stringDetector] appendPDFString:pdfString withFont:[scanner currentFont]];
 	if (scanner.rawTextContent && string)
@@ -481,7 +481,7 @@ void Td(CGPDFScannerRef scanner, void *info)
 	CGPDFReal tx = 0, ty = 0;
 	CGPDFScannerPopNumber(scanner, &ty);
 	CGPDFScannerPopNumber(scanner, &tx);
-	[[(Scanner *)info currentRenderingState] newLineWithLeading:-ty indent:tx save:NO];
+	[[(MHPDFScanner *)info currentRenderingState] newLineWithLeading:-ty indent:tx save:NO];
 }
 
 /* Move to start of next line, and set leading */
@@ -490,7 +490,7 @@ void TD(CGPDFScannerRef scanner, void *info)
 	CGPDFReal tx, ty;
 	if (!CGPDFScannerPopNumber(scanner, &ty)) return;
 	if (!CGPDFScannerPopNumber(scanner, &tx)) return;
-	[[(Scanner *)info currentRenderingState] newLineWithLeading:-ty indent:tx save:YES];
+	[[(MHPDFScanner *)info currentRenderingState] newLineWithLeading:-ty indent:tx save:YES];
 }
 
 /* Set line and text matrixes */
@@ -504,13 +504,13 @@ void Tm(CGPDFScannerRef scanner, void *info)
 	if (!CGPDFScannerPopNumber(scanner, &b)) return;
 	if (!CGPDFScannerPopNumber(scanner, &a)) return;
 	CGAffineTransform t = CGAffineTransformMake(a, b, c, d, tx, ty);
-	[[(Scanner *)info currentRenderingState] setTextMatrix:t replaceLineMatrix:YES];
+	[[(MHPDFScanner *)info currentRenderingState] setTextMatrix:t replaceLineMatrix:YES];
 }
 
 /* Go to start of new line, using stored text leading */
 void TStar(CGPDFScannerRef scanner, void *info)
 {
-	[[(Scanner *)info currentRenderingState] newLine];
+	[[(MHPDFScanner *)info currentRenderingState] newLine];
 }
 
 #pragma mark Text State operators
@@ -520,7 +520,7 @@ void Tc(CGPDFScannerRef scanner, void *info)
 {
 	CGPDFReal charSpace;
 	if (!CGPDFScannerPopNumber(scanner, &charSpace)) return;
-	[[(Scanner *)info currentRenderingState] setCharacterSpacing:charSpace];
+	[[(MHPDFScanner *)info currentRenderingState] setCharacterSpacing:charSpace];
 }
 
 /* Set word spacing */
@@ -528,7 +528,7 @@ void Tw(CGPDFScannerRef scanner, void *info)
 {
 	CGPDFReal wordSpace;
 	if (!CGPDFScannerPopNumber(scanner, &wordSpace)) return;
-	[[(Scanner *)info currentRenderingState] setWordSpacing:wordSpace];
+	[[(MHPDFScanner *)info currentRenderingState] setWordSpacing:wordSpace];
 }
 
 /* Set horizontal scale factor */
@@ -536,7 +536,7 @@ void Tz(CGPDFScannerRef scanner, void *info)
 {
 	CGPDFReal hScale;
 	if (!CGPDFScannerPopNumber(scanner, &hScale)) return;
-	[[(Scanner *)info currentRenderingState] setHorizontalScaling:hScale];
+	[[(MHPDFScanner *)info currentRenderingState] setHorizontalScaling:hScale];
 }
 
 /* Set text leading */
@@ -544,7 +544,7 @@ void TL(CGPDFScannerRef scanner, void *info)
 {
 	CGPDFReal leading;
 	if (!CGPDFScannerPopNumber(scanner, &leading)) return;
-	[[(Scanner *)info currentRenderingState] setLeadning:leading];
+	[[(MHPDFScanner *)info currentRenderingState] setLeadning:leading];
 }
 
 /* Font and font size */
@@ -555,8 +555,8 @@ void Tf(CGPDFScannerRef scanner, void *info)
 	if (!CGPDFScannerPopNumber(scanner, &fontSize)) return;
 	if (!CGPDFScannerPopName(scanner, &fontName)) return;
 	
-	RenderingState *state = [(Scanner *)info currentRenderingState];
-	Font *font = [[(Scanner *)info fontCollection] fontNamed:[NSString stringWithUTF8String:fontName]];
+	MHPDFRenderingState *state = [(MHPDFScanner *)info currentRenderingState];
+	MHPDFFont *font = [[(MHPDFScanner *)info fontCollection] fontNamed:[NSString stringWithUTF8String:fontName]];
 	[state setFont:font];
 	[state setFontSize:fontSize];
 }
@@ -566,7 +566,7 @@ void Ts(CGPDFScannerRef scanner, void *info)
 {
 	CGPDFReal rise;
 	if (!CGPDFScannerPopNumber(scanner, &rise)) return;
-	[[(Scanner *)info currentRenderingState] setTextRise:rise];
+	[[(MHPDFScanner *)info currentRenderingState] setTextRise:rise];
 }
 
 
@@ -575,8 +575,8 @@ void Ts(CGPDFScannerRef scanner, void *info)
 /* Push a copy of current rendering state */
 void q(CGPDFScannerRef scanner, void *info)
 {
-	RenderingStateStack *stack = [(Scanner *)info renderingStateStack];
-	RenderingState *state = [[(Scanner *)info currentRenderingState] copy];
+	RenderingStateStack *stack = [(MHPDFScanner *)info renderingStateStack];
+	MHPDFRenderingState *state = [[(MHPDFScanner *)info currentRenderingState] copy];
 	[stack pushRenderingState:state];
 	[state release];
 }
@@ -584,7 +584,7 @@ void q(CGPDFScannerRef scanner, void *info)
 /* Pop current rendering state */
 void Q(CGPDFScannerRef scanner, void *info)
 {
-	[[(Scanner *)info renderingStateStack] popRenderingState];
+	[[(MHPDFScanner *)info renderingStateStack] popRenderingState];
 }
 
 /* Update CTM */
@@ -598,7 +598,7 @@ void cm(CGPDFScannerRef scanner, void *info)
 	if (!CGPDFScannerPopNumber(scanner, &b)) return;
 	if (!CGPDFScannerPopNumber(scanner, &a)) return;
 	
-	RenderingState *state = [(Scanner *)info currentRenderingState];
+	MHPDFRenderingState *state = [(MHPDFScanner *)info currentRenderingState];
 	CGAffineTransform t = CGAffineTransformMake(a, b, c, d, tx, ty);
 	state.ctm = CGAffineTransformConcat(state.ctm, t);
 }
@@ -616,11 +616,11 @@ void cm(CGPDFScannerRef scanner, void *info)
 	return renderingStateStack;
 }
 
-- (StringDetector *)stringDetector
+- (MHPDFStringDetector *)stringDetector
 {
 	if (!stringDetector)
 	{
-		stringDetector = [[StringDetector alloc] initWithKeyword:self.keyword];
+		stringDetector = [[MHPDFStringDetector alloc] initWithKeyword:self.keyword];
 		stringDetector.delegate = self;
 	}
 	return stringDetector;

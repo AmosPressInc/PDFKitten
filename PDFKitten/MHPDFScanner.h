@@ -1,18 +1,18 @@
 #import <Foundation/Foundation.h>
-#import "StringDetector.h"
-#import "FontCollection.h"
-#import "RenderingState.h"
-#import "Selection.h"
+#import "MHPDFStringDetector.h"
+#import "MHPDFFontCollection.h"
+#import "MHPDFRenderingState.h"
+#import "MHPDFSelection.h"
 
-@interface Scanner : NSObject <StringDetectorDelegate> {
+@interface MHPDFScanner : NSObject <StringDetectorDelegate> {
 	NSURL *documentURL;
 	NSString *keyword;
 	CGPDFDocumentRef pdfDocument;
 	CGPDFOperatorTableRef operatorTable;
-	StringDetector *stringDetector;
-	FontCollection *fontCollection;
+	MHPDFStringDetector *stringDetector;
+	MHPDFFontCollection *fontCollection;
 	RenderingStateStack *renderingStateStack;
-	Selection *currentSelection;
+	MHPDFSelection *currentSelection;
 	NSMutableDictionary *selectionsDic;
 	NSMutableString **rawTextContent;
     
@@ -47,8 +47,8 @@
 /* We use an NSDictionary to avoid NSPredicates when accessing specifics Selections for Pages */
 @property (nonatomic, retain) NSMutableDictionary *selectionsDic;
 @property (nonatomic, retain) RenderingStateStack *renderingStateStack;
-@property (nonatomic, retain) FontCollection *fontCollection;
-@property (nonatomic, retain) StringDetector *stringDetector;
+@property (nonatomic, retain) MHPDFFontCollection *fontCollection;
+@property (nonatomic, retain) MHPDFStringDetector *stringDetector;
 @property (nonatomic, retain) NSString *keyword;
 @property (nonatomic, assign) NSMutableString **rawTextContent;
 @end

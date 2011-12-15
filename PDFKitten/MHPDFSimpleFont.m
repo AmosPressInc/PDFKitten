@@ -1,7 +1,7 @@
-#import "SimpleFont.h"
+#import "MHPDFSimpleFont.h"
 
 
-@implementation SimpleFont
+@implementation MHPDFSimpleFont
 
 /* Initialize with a font dictionary */
 - (id)initWithFontDictionary:(CGPDFDictionaryRef)dict

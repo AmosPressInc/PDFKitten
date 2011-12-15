@@ -1,7 +1,7 @@
-#import "FontCollection.h"
+#import "MHPDFFontCollection.h"
 
 
-@implementation FontCollection
+@implementation MHPDFFontCollection
 
 /* Applier function for font dictionaries */
 void didScanFont(const char *key, CGPDFObjectRef object, void *collection)
@@ -9,7 +9,7 @@ void didScanFont(const char *key, CGPDFObjectRef object, void *collection)
 	if (!CGPDFObjectGetType(object) == kCGPDFObjectTypeDictionary) return;
 	CGPDFDictionaryRef dict;
 	if (!CGPDFObjectGetValue(object, kCGPDFObjectTypeDictionary, &dict)) return;
-	Font *font = [Font fontWithDictionary:dict];
+	MHPDFFont *font = [MHPDFFont fontWithDictionary:dict];
 	if (!font) return;
 	NSString *name = [NSString stringWithUTF8String:key];
 	[(NSMutableDictionary *)collection setObject:font forKey:name];
@@ -44,7 +44,7 @@ void didScanFont(const char *key, CGPDFObjectRef object, void *collection)
 }
 
 /* Return the specified font */
-- (Font *)fontNamed:(NSString *)fontName
+- (MHPDFFont *)fontNamed:(NSString *)fontName
 {
 	return [fonts objectForKey:fontName];
 }

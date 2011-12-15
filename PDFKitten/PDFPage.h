@@ -1,12 +1,12 @@
 #import "Page.h"
-#import "Scanner.h"
+#import "MHPDFScanner.h"
 
 
 @interface PDFContentView : PageContentView {
 	CGPDFPageRef pdfPage;
     NSString *keyword;
 	NSArray *selections;
-	Scanner *scanner;
+	MHPDFScanner *scanner;
     NSUInteger _pageNumber;
 }
 
@@ -14,7 +14,7 @@
 
 - (void)setPage:(CGPDFPageRef)page;
 
-@property (nonatomic, retain) Scanner *scanner;
+@property (nonatomic, retain) MHPDFScanner *scanner;
 @property (nonatomic, copy) NSString *keyword;
 @property (nonatomic, copy) NSArray *selections;
 

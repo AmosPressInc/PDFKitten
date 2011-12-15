@@ -1,7 +1,7 @@
-#import "CMap.h"
+#import "MHPDFCMap.h"
 #import "TrueTypeFont.h"
 
-@implementation CMap
+@implementation MHPDFCMap
 
 - (void)scanCodeSpaceRange:(NSScanner *)scanner
 {

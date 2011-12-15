@@ -1,25 +1,25 @@
-#import "Font.h"
+#import "MHPDFFont.h"
 
 // Simple fonts
-#import "Type1Font.h"
-#import "TrueTypeFont.h"
-#import "MMType1Font.h"
-#import "Type3Font.h"
+#import "MHPDFType1Font.h"
+#import "MHPDFTrueTypeFont.h"
+#import "MHPDFMMType1Font.h"
+#import "MHPDFType3Font.h"
 
 // Composite fonts
-#import "Type0Font.h"
-#import "CIDType2Font.h"
-#import "CIDType0Font.h"
+#import "MHPDFType0Font.h"
+#import "MHPDFCIDType2Font.h"
+#import "MHPDFCIDType0Font.h"
 
 
 #pragma mark 
 
-@implementation Font
+@implementation MHPDFFont
 
 #pragma mark - Initialization
 
 /* Factory method returns a Font object given a PDF font dictionary */
-+ (Font *)fontWithDictionary:(CGPDFDictionaryRef)dictionary
++ (MHPDFFont *)fontWithDictionary:(CGPDFDictionaryRef)dictionary
 {
 	const char *type = nil;
 	CGPDFDictionaryGetName(dictionary, "Type", &type);
@@ -29,31 +29,31 @@
 
 	if (strcmp(subtype, "Type0") == 0)
 	{
-		return [[[Type0Font	alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFType0Font	alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	else if (strcmp(subtype, "Type1") == 0)
 	{
-		return [[[Type1Font alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFType1Font alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	else if (strcmp(subtype, "MMType1") == 0)
 	{
-		return [[[MMType1Font alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFMMType1Font alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	else if (strcmp(subtype, "Type3") == 0)
 	{
-		return [[[Type3Font alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFType3Font alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	else if (strcmp(subtype, "TrueType") == 0)
 	{
-		return [[[TrueTypeFont alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFTrueTypeFont alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	else if (strcmp(subtype, "CIDFontType0") == 0)
 	{
-		return [[[CIDType0Font alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFCIDType0Font alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	else if (strcmp(subtype, "CIDFontType2") == 0)
 	{
-		return [[[CIDType2Font alloc] initWithFontDictionary:dictionary] autorelease];
+		return [[[MHPDFCIDType2Font alloc] initWithFontDictionary:dictionary] autorelease];
 	}
 	return nil;
 }
@@ -84,7 +84,7 @@
 {
 	CGPDFDictionaryRef descriptor;
 	if (!CGPDFDictionaryGetDictionary(dict, "FontDescriptor", &descriptor)) return;
-	FontDescriptor *desc = [[FontDescriptor alloc] initWithPDFDictionary:descriptor];
+	MHPDFFontDescriptor *desc = [[MHPDFFontDescriptor alloc] initWithPDFDictionary:descriptor];
 	self.fontDescriptor = desc;
 	[desc release];
 }
@@ -100,7 +100,7 @@
 {
 	CGPDFStreamRef stream;
 	if (!CGPDFDictionaryGetStream(dict, "ToUnicode", &stream)) return;
-	CMap *map = [[CMap alloc] initWithPDFStream:stream];
+	MHPDFCMap *map = [[MHPDFCMap alloc] initWithPDFStream:stream];
 	self.toUnicode = map;
 	[map release];
 }

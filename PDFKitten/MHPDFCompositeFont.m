@@ -1,7 +1,7 @@
-#import "CompositeFont.h"
+#import "MHPDFCompositeFont.h"
 
 
-@implementation CompositeFont
+@implementation MHPDFCompositeFont
 
 /* Override with implementation for composite fonts */
 - (void)setWidthsWithFontDictionary:(CGPDFDictionaryRef)dict

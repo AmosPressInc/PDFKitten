@@ -1,7 +1,7 @@
 #import "RootViewController.h"  
 #import "PDFPage.h"
 #import "DocumentsView.h"
-#import "Scanner.h"
+#import "MHPDFScanner.h"
 #import "PDFPageDetailsView.h"
 
 @implementation RootViewController
@@ -69,7 +69,7 @@
 	return CGPDFDocumentGetNumberOfPages(document);
 }
 
-- (FontCollection *)activeFontCollection
+- (MHPDFFontCollection *)activeFontCollection
 {
 	Page *page = [pageView pageAtIndex:pageView.page];
 	PDFContentView *pdfPage = (PDFContentView *) [(PDFPage *) page contentView];
@@ -79,7 +79,7 @@
 /* Return the detailed view corresponding to a page */
 - (UIView *)pageView:(PageView *)aPageView detailedViewForPage:(NSInteger)page
 {
-	Scanner *scanner = [[Scanner alloc] init];
+	MHPDFScanner *scanner = [[MHPDFScanner alloc] init];
 	[scanner setKeyword:@""];
 	NSMutableString *contentString = [NSMutableString string];
 	[scanner setRawTextContent:&contentString];
@@ -87,7 +87,7 @@
 	[scanner scanPage:pdfpage];
 	[scanner release];
 
-	FontCollection *collection = [self activeFontCollection];
+	MHPDFFontCollection *collection = [self activeFontCollection];
 	PDFPageDetailsView *detailedView = [[PDFPageDetailsView alloc] initWithFont:collection];
 	return [detailedView view];
 }
@@ -133,7 +133,7 @@
 	[pageView setKeyword:keyword];
 	
     if(!_testBGScanner)
-        _testBGScanner = [[Scanner alloc] initWithDocument:document];
+        _testBGScanner = [[MHPDFScanner alloc] initWithDocument:document];
     [_testBGScanner cancelScanning];
     
     [_testBGScanner setKeyword:keyword];

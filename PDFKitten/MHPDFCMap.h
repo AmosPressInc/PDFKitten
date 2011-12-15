@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface CMap : NSObject {
+@interface MHPDFCMap : NSObject {
 	NSMutableArray *offsets;
     NSMutableDictionary *chars;
 }

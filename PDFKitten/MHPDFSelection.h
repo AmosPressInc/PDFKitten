@@ -1,18 +1,18 @@
 #import <Foundation/Foundation.h>
 
-@class RenderingState;
+@class MHPDFRenderingState;
 
-@interface Selection : NSObject {
-	RenderingState *initialState;
+@interface MHPDFSelection : NSObject {
+	MHPDFRenderingState *initialState;
 	CGAffineTransform transform;
 	CGRect frame;
 }
 
 /* Initalize with rendering state (starting marker) */
-- (id)initWithStartState:(RenderingState *)state;
+- (id)initWithStartState:(MHPDFRenderingState *)state;
 
 /* Finalize the selection (ending marker) */
-- (void)finalizeWithState:(RenderingState *)state;
+- (void)finalizeWithState:(MHPDFRenderingState *)state;
 
 /* The frame with zero origin covering the selection */
 @property (nonatomic, readonly) CGRect frame;

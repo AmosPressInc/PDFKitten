@@ -1,7 +1,7 @@
-#import "FontDescriptor.h"
+#import "MHPDFFontDescriptor.h"
 #import "TrueTypeFont.h"
 
-@implementation FontDescriptor
+@implementation MHPDFFontDescriptor
 
 - (id)initWithPDFDictionary:(CGPDFDictionaryRef)dict
 {

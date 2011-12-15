@@ -1,7 +1,7 @@
-#import "CIDType0Font.h"
+#import "MHPDFCIDType0Font.h"
 
 
-@implementation CIDType0Font
+@implementation MHPDFCIDType0Font
 
 - (NSString *)stringWithPDFString:(CGPDFStringRef)pdfString
 {

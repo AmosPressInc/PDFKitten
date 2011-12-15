@@ -7,19 +7,19 @@
  *	
  */
 #import <Foundation/Foundation.h>
-#import "FontDescriptor.h"
-#import "CMap.h"
+#import "MHPDFFontDescriptor.h"
+#import "MHPDFCMap.h"
 
-@interface Font : NSObject {
-	CMap *toUnicode;
+@interface MHPDFFont : NSObject {
+	MHPDFCMap *toUnicode;
 	NSMutableDictionary *widths;
-    FontDescriptor *fontDescriptor;
+    MHPDFFontDescriptor *fontDescriptor;
 	NSDictionary *ligatures;
 	NSRange widthsRange;
 }
 
 /* Factory method returns a Font object given a PDF font dictionary */
-+ (Font *)fontWithDictionary:(CGPDFDictionaryRef)dictionary;
++ (MHPDFFont *)fontWithDictionary:(CGPDFDictionaryRef)dictionary;
 
 /* Initialize with a font dictionary */
 - (id)initWithFontDictionary:(CGPDFDictionaryRef)dict;
@@ -45,9 +45,9 @@
 /* Unicode character with CID */
 - (NSString *)stringWithCharacters:(const char *)characters;
 
-@property (nonatomic, retain) CMap *toUnicode;
+@property (nonatomic, retain) MHPDFCMap *toUnicode;
 @property (nonatomic, retain) NSMutableDictionary *widths;
-@property (nonatomic, retain) FontDescriptor *fontDescriptor;
+@property (nonatomic, retain) MHPDFFontDescriptor *fontDescriptor;
 @property (nonatomic, readonly) CGFloat minY;
 @property (nonatomic, readonly) CGFloat maxY;
 @property (nonatomic, readonly) NSDictionary *ligatures;

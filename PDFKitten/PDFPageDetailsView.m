@@ -2,7 +2,7 @@
 
 @implementation PDFPageDetailsView
 
-- (id)initWithFont:(FontCollection *)aFontCollection
+- (id)initWithFont:(MHPDFFontCollection *)aFontCollection
 {
 	fontCollection = [aFontCollection retain];
 	UITableViewController *rvc = [[UITableViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -41,7 +41,7 @@
 	
 	
 	NSString *name = [[fontCollection names] objectAtIndex:indexPath.section];
-	Font *font = [fontCollection fontNamed:name];
+	MHPDFFont *font = [fontCollection fontNamed:name];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
 	switch (indexPath.row)

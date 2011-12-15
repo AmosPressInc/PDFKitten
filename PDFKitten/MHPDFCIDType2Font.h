@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import "CompositeFont.h"
+#import "MHPDFCompositeFont.h"
 
-@interface CIDType2Font : CompositeFont {
+@interface MHPDFCIDType2Font : MHPDFCompositeFont {
 	BOOL identity;
 }
 
