@@ -132,7 +132,19 @@
 	keyword = [[aSearchBar text] retain];
 	[pageView setKeyword:keyword];
 	
+    if(!_testBGScanner)
+        _testBGScanner = [[Scanner alloc] initWithDocument:document];
+    [_testBGScanner cancelScanning];
+    
+    [_testBGScanner setKeyword:keyword];
+    
+    [self performSelector:@selector(startNewSearch) withObject:nil afterDelay:0.3];
+
 	[aSearchBar resignFirstResponder];
+}
+
+- (void) startNewSearch {
+    [_testBGScanner scanDocumentStartingFromPage:1];
 }
 
 #pragma mark Memory Management

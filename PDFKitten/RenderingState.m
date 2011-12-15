@@ -141,6 +141,7 @@
 - (void)dealloc
 {
 	[stack release];
+    stack = nil;
 	[super dealloc];
 }
 

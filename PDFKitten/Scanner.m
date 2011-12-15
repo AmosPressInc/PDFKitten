@@ -60,6 +60,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 	if ((self = [super init]))
 	{
 		pdfDocument = CGPDFDocumentRetain(document);
+        _numberOfPages = (NSUInteger)CGPDFDocumentGetNumberOfPages(pdfDocument);
 	}
 	return self;
 }
@@ -91,6 +92,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 	{
 		pdfDocument = CGPDFDocumentCreateWithURL((CFURLRef)self.documentURL);
 	}
+    _numberOfPages = (NSUInteger)CGPDFDocumentGetNumberOfPages(pdfDocument);
 	return pdfDocument;
 }
 
@@ -169,6 +171,10 @@ void cm(CGPDFScannerRef scanner, void *info);
 	// Return immediately if no keyword set
 	if (!keyword) return;
     
+    NSUInteger pageNumber = (NSUInteger)CGPDFPageGetPageNumber(page);
+    _initialPage = pageNumber;
+    _currentPage = pageNumber;
+    
     [self.stringDetector reset];
     self.stringDetector.keyword = self.keyword;
 
@@ -180,8 +186,135 @@ void cm(CGPDFScannerRef scanner, void *info);
 	CGPDFScannerScan(scanner);
 	CGPDFScannerRelease(scanner); scanner = nil;
 	CGPDFContentStreamRelease(content); content = nil;
+    
+    _currentPageParsingInProgress = NO;
 }
 
+- (void) scanDocumentStartingFromPage:(NSUInteger)pageNumber {
+    
+	// Return immediately if no keyword set
+	if (!keyword) return;
+    
+    // Init
+    _searchFinished = NO;
+	_currentPage = pageNumber;
+	_initialPage = pageNumber;
+    
+    // Handle the error just in case
+	if (_initialPage > _numberOfPages) {
+		return;
+	}
+    
+    // reset the dic
+    [self.selectionsDic removeAllObjects];
+    
+    // create a thread to start searching
+	[_searchThread cancel];
+	[_searchThread autorelease];
+	_searchThread = [[NSThread alloc] initWithTarget:self selector:@selector(_scanDocumentInBackground) object:nil];
+	[_searchThread start];
+
+}
+
+- (void) cancelScanning {
+	if (![_searchThread isFinished] || ![_searchThread isCancelled]) {
+        self.renderingStateStack = nil;
+        self.fontCollection = nil;
+        self.stringDetector = nil;
+        _searchFinished = YES;
+        _currentPageParsingInProgress = NO;
+        [_searchThread cancel];
+	}
+}
+
+#define TEXT_LENGTH_TO_SHOW 150 // nb of characters
+
+- (void) _scanDocumentInBackground
+{    
+    NSMutableString *contentString = [NSMutableString string];
+	[self setRawTextContent:&contentString];
+    
+	while (!_searchFinished)
+    {
+        _currentPageParsingInProgress = YES;
+        [self scanDocumentPage:_currentPage];
+        
+        while (_currentPageParsingInProgress) {
+            // Do nothing, wait !
+        }
+
+        // now find the text around
+        NSArray *arrayOfSelections = [selectionsDic objectForKey:[NSNumber numberWithUnsignedInteger:_currentPage]];
+        if ([arrayOfSelections count] != 0) {
+            
+            NSInteger totalCharactersCount = TEXT_LENGTH_TO_SHOW + [*rawTextContent length];
+            NSInteger sideNumberOfCharacters = totalCharactersCount / 2;
+            
+            NSRange searchRange = NSMakeRange(0, [*self.rawTextContent length]);
+			
+			NSRange range = [*self.rawTextContent rangeOfString:self.keyword options:NSCaseInsensitiveSearch range:searchRange];
+            
+            int currentSelectionIndex = 0;
+            
+			while (range.location != NSNotFound) {
+                
+				Selection *selection = (Selection*)[arrayOfSelections objectAtIndex:currentSelectionIndex];
+				
+				// gestion du texte autour
+				NSInteger leftStart, rightEnd;
+				if (range.location > sideNumberOfCharacters)
+					leftStart = range.location - sideNumberOfCharacters;
+				else
+					leftStart = 0;
+				
+				if (range.location + range.length + sideNumberOfCharacters < [*self.rawTextContent length])
+					rightEnd = range.location + range.length + sideNumberOfCharacters;
+				else
+					rightEnd = [*self.rawTextContent length];
+				
+                
+				// Substring to get the text around
+				NSString *stringAroundSearch = [[NSString stringWithString:*self.rawTextContent] substringWithRange:NSMakeRange(leftStart, rightEnd-leftStart)];
+				
+				// search the first space on the left
+				NSRange leftRange = [stringAroundSearch rangeOfString:@" "];
+				if (leftRange.location != NSNotFound) {
+					NSInteger startRange = leftRange.location + leftRange.length;
+					stringAroundSearch = [stringAroundSearch substringWithRange:NSMakeRange(startRange, [stringAroundSearch length] - startRange)];
+				}
+				
+				// search the first space on the right
+				NSRange rightRange = [stringAroundSearch rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, [stringAroundSearch length])];
+ 				if (rightRange.location != NSNotFound) {
+					NSInteger startRange = 0;
+					stringAroundSearch = [stringAroundSearch substringWithRange:NSMakeRange(startRange, rightRange.location)];
+				}
+				
+				selection.textAroundSearch = stringAroundSearch;
+                
+				NSInteger startSearch = range.location + range.length;
+				searchRange = NSMakeRange(startSearch, [*self.rawTextContent length] - startSearch);
+				range = [*self.rawTextContent rangeOfString:self.keyword options:NSCaseInsensitiveSearch range:searchRange];
+				
+			}
+        }
+        
+        
+        NSMutableString *contentString = [NSMutableString string];
+        [self setRawTextContent:&contentString];
+        // update new page
+		_currentPage ++;
+		
+		if (_currentPage > _numberOfPages) {
+			_currentPage = 1;
+		}
+        
+		if (_currentPage == 1) {
+			_searchFinished = YES;
+        }
+    }
+    NSLog(@"%@", self.selectionsDic);
+}
 
 #pragma mark StringDetectorDelegate
 
@@ -201,6 +334,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 - (void)detector:(StringDetector *)detector didStartMatchingString:(NSString *)string
 {
 	Selection *sel = [[Selection alloc] initWithStartState:self.currentRenderingState];
+    sel.pageNumber = _currentPage;
 	self.currentSelection = sel;
 	[sel release];
 }
@@ -212,9 +346,16 @@ void cm(CGPDFScannerRef scanner, void *info);
 
 	if (self.currentSelection)
 	{
-		[self.selections addObject:self.currentSelection];
+        NSMutableArray *arrayForPage = [self.selectionsDic objectForKey:[NSNumber numberWithUnsignedInteger:self.currentSelection.pageNumber]];
+        if (!arrayForPage) {
+            arrayForPage = [NSMutableArray array];
+            [self.selectionsDic setObject:arrayForPage forKey:[NSNumber numberWithUnsignedInteger:self.currentSelection.pageNumber]];
+        }
+		[arrayForPage addObject:self.currentSelection];
 		self.currentSelection = nil;
 	}
+    
+    _currentPageParsingInProgress = NO;
 }
 
 #pragma mark - Scanner callbacks
@@ -260,10 +401,9 @@ void didScanSpace(float value, Scanner *scanner)
 void didScanString(CGPDFStringRef pdfString, Scanner *scanner)
 {
 	NSString *string = [[scanner stringDetector] appendPDFString:pdfString withFont:[scanner currentFont]];
-	
-	if (scanner.rawTextContent)
+	if (scanner.rawTextContent && string)
 	{
-		[*scanner.rawTextContent appendString:string];
+        [*scanner.rawTextContent appendFormat:@"%@", string];
 	}
 }
 
@@ -486,13 +626,13 @@ void cm(CGPDFScannerRef scanner, void *info)
 	return stringDetector;
 }
 
-- (NSMutableArray *)selections
+- (NSMutableDictionary *)selectionsDic
 {
-	if (!selections)
+	if (!selectionsDic)
 	{
-		selections = [[NSMutableArray alloc] init];
+		selectionsDic = [[NSMutableDictionary alloc] init];
 	}
-	return selections;
+	return selectionsDic;
 }
 
 - (void)dealloc
@@ -508,5 +648,5 @@ void cm(CGPDFScannerRef scanner, void *info)
 	[super dealloc];
 }
 
-@synthesize documentURL, keyword, stringDetector, fontCollection, renderingStateStack, currentSelection, selections, rawTextContent;
+@synthesize documentURL, keyword, stringDetector, fontCollection, renderingStateStack, currentSelection, selectionsDic, rawTextContent;
 @end

@@ -30,7 +30,7 @@
 	[keyword release];
 	keyword = [str retain];
 	self.selections = nil;
-    self.scanner.selections = nil;
+    self.scanner.selectionsDic = nil;
 }
 
 - (NSArray *)selections
@@ -41,7 +41,8 @@
 		{
 			[self.scanner setKeyword:self.keyword];
 			[self.scanner scanPage:pdfPage];
-			self.selections = [self.scanner selections];
+			self.selections = [[self.scanner selectionsDic] objectForKey:[NSNumber numberWithUnsignedInteger:_pageNumber]];
+            NSLog(@"%@", self.scanner.selectionsDic);
 		}
 		return selections;
 	}
@@ -93,6 +94,7 @@
 {
     CGPDFPageRelease(pdfPage);
 	pdfPage = CGPDFPageRetain(page);
+    _pageNumber = (NSUInteger)CGPDFPageGetPageNumber(pdfPage);
 }
 
 #pragma mark Memory Management

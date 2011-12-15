@@ -7,6 +7,7 @@
     NSString *keyword;
 	NSArray *selections;
 	Scanner *scanner;
+    NSUInteger _pageNumber;
 }
 
 #pragma mark

@@ -106,7 +106,10 @@
  	
 	// Use Unicode string to compare with user input.
 	NSString *unicodeString = [[font stringWithPDFString:string] lowercaseString];
-	
+	if (!unicodeString) {
+        // error
+        return nil;
+    }
 	[unicodeContent appendString:unicodeString];
 		
 	for (int i = 0; i < [unicodeString length]; i++)

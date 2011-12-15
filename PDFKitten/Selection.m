@@ -3,6 +3,12 @@
 
 
 @implementation Selection
+@synthesize frame, transform, pageNumber = _pageNumber;
+@synthesize textAroundSearch = _textAroundSearch;
+
+- (NSString*) description {
+    return [NSString stringWithFormat:@"%@: <%p> — %d — '%@'", NSStringFromClass([self class]), self, _pageNumber, _textAroundSearch];
+}
 
 /* Rendering state represents opening (left) cap */
 - (id)initWithStartState:(RenderingState *)state
@@ -53,8 +59,8 @@
 - (void)dealloc
 {
 	[initialState release];
+    [_textAroundSearch release];
 	[super dealloc];
 }
 
-@synthesize frame, transform;
 @end

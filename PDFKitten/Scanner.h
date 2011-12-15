@@ -13,8 +13,17 @@
 	FontCollection *fontCollection;
 	RenderingStateStack *renderingStateStack;
 	Selection *currentSelection;
-	NSMutableArray *selections;
+	NSMutableDictionary *selectionsDic;
 	NSMutableString **rawTextContent;
+    
+    NSUInteger _initialPage;
+    NSUInteger _currentPage;
+    NSUInteger _numberOfPages;
+    NSThread *_searchThread;
+
+    BOOL _currentPageParsingInProgress;
+    BOOL _searchFinished;
+
 }
 
 /* Initialize with a file path */
@@ -29,7 +38,14 @@
 /* Start scanning a particular page */
 - (void)scanPage:(CGPDFPageRef)page;
 
-@property (nonatomic, retain) NSMutableArray *selections;
+/* Start scanning from a Page */
+- (void)scanDocumentStartingFromPage:(NSUInteger) pageNumber;
+
+/* Cancel the scanning */
+- (void) cancelScanning;
+
+/* We use an NSDictionary to avoid NSPredicates when accessing specifics Selections for Pages */
+@property (nonatomic, retain) NSMutableDictionary *selectionsDic;
 @property (nonatomic, retain) RenderingStateStack *renderingStateStack;
 @property (nonatomic, retain) FontCollection *fontCollection;
 @property (nonatomic, retain) StringDetector *stringDetector;
