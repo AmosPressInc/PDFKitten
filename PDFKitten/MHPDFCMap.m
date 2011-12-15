@@ -1,5 +1,5 @@
 #import "MHPDFCMap.h"
-#import "TrueTypeFont.h"
+#import "MHPDFTrueTypeFont.h"
 
 @implementation MHPDFCMap
 
@@ -9,7 +9,7 @@
 	NSString *content = nil;
 	[scanner scanUpToString:endToken intoString:&content];
 	[scanner scanString:endToken intoString:nil];
-	NSLog(@"%@", content);
+	MHLog(@"%@", content);
 }
 
 - (void)scanRanges:(NSScanner *)scanner
@@ -30,7 +30,7 @@
 		[rangeScanner scanHexInt:&end];
 		[rangeScanner scanUpToCharactersFromSet:alphaNumericalSet intoString:nil];
 		[rangeScanner scanHexInt:&offset];
-//		NSLog(@"%d,%d offset %d", start, end, offset);
+//		MHLog(@"%d,%d offset %d", start, end, offset);
 		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
 							  [NSNumber numberWithInt:start], @"First",
 							  [NSNumber numberWithInt:end], @"Last",
@@ -100,7 +100,7 @@
 	NSScanner *scanner = [NSScanner scannerWithString:text];
 	[scanner scanUpToString:@"begincmap" intoString:nil];
 	[scanner scanString:@"begincmap" intoString:nil];
-	NSLog(@"%d", scanner.scanLocation);
+	MHLog(@"%d", scanner.scanLocation);
 	[self scanCMap:scanner];
 }
 

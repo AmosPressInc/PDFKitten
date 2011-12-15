@@ -10,6 +10,9 @@
 #import "MHPDFFontDescriptor.h"
 #import "MHPDFCMap.h"
 
+//#define MHLog(fmt, ...) NSLog(fmt, ...)
+#define MHLog(fmt, ...)
+
 @interface MHPDFFont : NSObject {
 	MHPDFCMap *toUnicode;
 	NSMutableDictionary *widths;

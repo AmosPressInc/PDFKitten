@@ -1,5 +1,5 @@
 #import "MHPDFFontDescriptor.h"
-#import "TrueTypeFont.h"
+#import "MHPDFTrueTypeFont.h"
 
 @implementation MHPDFFontDescriptor
 

@@ -13,7 +13,7 @@ void didScanFont(const char *key, CGPDFObjectRef object, void *collection)
 	if (!font) return;
 	NSString *name = [NSString stringWithUTF8String:key];
 	[(NSMutableDictionary *)collection setObject:font forKey:name];
-	NSLog(@" %s: %@", key, font);
+	MHLog(@" %s: %@", key, font);
 }
 
 /* Initialize with a font collection dictionary */
@@ -21,7 +21,7 @@ void didScanFont(const char *key, CGPDFObjectRef object, void *collection)
 {
 	if ((self = [super init]))
 	{
-		NSLog(@"Font Collection (%d)", CGPDFDictionaryGetCount(dict));
+		MHLog(@"Font Collection (%d)", CGPDFDictionaryGetCount(dict));
 		fonts = [[NSMutableDictionary alloc] init];
 		// Enumerate the Font resource dictionary
 		CGPDFDictionaryApplyFunction(dict, didScanFont, fonts);
