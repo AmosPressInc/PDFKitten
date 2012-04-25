@@ -230,7 +230,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 	}
 }
 
-#define TEXT_LENGTH_TO_SHOW 50 // nb of characters (originally 150)
+#define TEXT_LENGTH_TO_SHOW 150 // nb of characters
 
 - (void) _scanDocumentInBackground
 {    
