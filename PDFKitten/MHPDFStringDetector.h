@@ -33,6 +33,7 @@
 	NSUInteger keywordPosition;
 	NSMutableString *unicodeContent;
 	id<StringDetectorDelegate> delegate;
+  BOOL isCancelled;
 }
 
 /* Initialize with a given needle */
@@ -43,6 +44,8 @@
 
 /* Reset the detector state */
 - (void)reset;
+
+- (void)cancel;
 
 @property (nonatomic, retain) NSString *keyword;
 @property (nonatomic, assign) id<StringDetectorDelegate> delegate;

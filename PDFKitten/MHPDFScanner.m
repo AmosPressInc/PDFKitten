@@ -222,6 +222,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 	if (![_searchThread isFinished] || ![_searchThread isCancelled]) {
         self.renderingStateStack = nil;
         self.fontCollection = nil;
+    [self.stringDetector cancel];
         self.stringDetector = nil;
         _searchFinished = YES;
         _currentPageParsingInProgress = NO;
@@ -229,7 +230,7 @@ void cm(CGPDFScannerRef scanner, void *info);
 	}
 }
 
-#define TEXT_LENGTH_TO_SHOW 150 // nb of characters
+#define TEXT_LENGTH_TO_SHOW 50 // nb of characters (originally 150)
 
 - (void) _scanDocumentInBackground
 {    

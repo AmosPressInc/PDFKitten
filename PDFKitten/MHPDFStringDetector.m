@@ -27,6 +27,10 @@
 	self.keywordPosition = 0;
 }
 
+- (void)cancel {
+  isCancelled = true;
+}
+
 /* The first characher was detected (e.g. "c" in "cat") */
 - (void)didStartDetectingNeedle
 {
@@ -101,6 +105,9 @@
 /* Feed a string into the state machine */
 - (NSString *)appendPDFString:(CGPDFStringRef)string withFont:(MHPDFFont *)font
 {
+  // retain self while in this function to prevent dealloc whilst working.
+  [self retain];
+  
 	// Use CID string for font-related computations.
 	NSString *cidString = [font cidWithPDFString: string];
  	
@@ -114,6 +121,8 @@
 		
 	for (int i = 0; i < [unicodeString length]; i++)
 	{
+    if (isCancelled) break;
+    
 		NSString *needleString = [NSString stringWithFormat:@"%C", [unicodeString characterAtIndex:i]];
 		
 		// Expand ligatures to separate characters
@@ -171,6 +180,10 @@
 			}
 		}
 	}
+  
+  // release self after work is done.
+  [self release];
+  
 	return unicodeString;
 }
 
